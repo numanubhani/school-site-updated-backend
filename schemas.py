@@ -1,5 +1,5 @@
-from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Optional
 from datetime import datetime
 
 class UserBase(BaseModel):
@@ -11,14 +11,19 @@ class UserCreate(UserBase):
     password: str
     school_id: Optional[int] = None
 
+class UserCreateWithCode(BaseModel):
+    email: EmailStr
+    display_name: str
+    password: str
+    invite_code: str
+
 class UserResponse(UserBase):
     id: int
     uid: str
     school_id: Optional[int]
     created_at: datetime
-    
-    class Config:
-        orm_mode = True
+
+    model_config = ConfigDict(from_attributes=True)
 
 class SchoolBase(BaseModel):
     name: str
@@ -33,9 +38,8 @@ class SchoolResponse(SchoolBase):
     invite_code: str
     principal_id: int
     created_at: datetime
-    
-    class Config:
-        orm_mode = True
+
+    model_config = ConfigDict(from_attributes=True)
 
 class ClassBase(BaseModel):
     name: str
@@ -48,9 +52,59 @@ class ClassResponse(ClassBase):
     school_id: int
     teacher_id: Optional[int]
     created_at: datetime
-    
-    class Config:
-        orm_mode = True
+    student_count: Optional[int] = 0
+
+    model_config = ConfigDict(from_attributes=True)
+
+class EnrollmentResponse(BaseModel):
+    id: int
+    student_id: int
+    class_id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class SubjectBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+class SubjectCreate(SubjectBase):
+    pass
+
+class SubjectResponse(SubjectBase):
+    id: int
+    class_id: int
+    created_by_id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class MaterialBase(BaseModel):
+    title: str
+    description: Optional[str] = None
+    material_type: str  # video_url, pdf, file
+    url: Optional[str] = None
+
+class MaterialCreate(MaterialBase):
+    pass
+
+class MaterialResponse(MaterialBase):
+    id: int
+    filename: Optional[str]
+    subject_id: int
+    uploaded_by_id: int
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class SchoolUpdate(BaseModel):
+    name: Optional[str] = None
+    address: Optional[str] = None
+    phone: Optional[str] = None
+
+class MaterialUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
 
 class Token(BaseModel):
     access_token: str

@@ -1,37 +1,46 @@
-# Python
+# Python cache
 __pycache__/
 *.py[cod]
+*$py.class
 *.pyo
 *.pyd
-*.egg
-*.egg-info/
-dist/
-build/
-.eggs/
+*.so
 
 # Virtual environment
 venv/
-env/
 .venv/
+env/
+ENV/
 
 # Environment variables
 .env
+.env.local
 .env.*
 
-# Database
+# Database (each server has its own — never commit production data)
 *.db
 *.sqlite
 *.sqlite3
+
+# Uploaded files (large binaries — server manages its own storage)
+uploads/*
+!uploads/.gitkeep
 
 # Logs
 *.log
 uvicorn_log.txt
 
-# OS
+# Dev utilities
+db_check.py
+claude history/
+
+# Editor / OS
 .DS_Store
 Thumbs.db
-
-# IDE
 .vscode/
 .idea/
-*.swp
+
+# Packaging
+*.egg-info/
+dist/
+build/
