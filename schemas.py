@@ -113,3 +113,38 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     email: Optional[str] = None
     role: Optional[str] = None
+
+class PlatformCourseLessonResponse(BaseModel):
+    id: int
+    course_id: int
+    title: str
+    content: str
+    duration: str
+    order: int
+
+    model_config = ConfigDict(from_attributes=True)
+
+class PlatformCourseMaterialResponse(BaseModel):
+    id: int
+    course_id: int
+    title: str
+    description: Optional[str]
+    material_type: str
+    url: Optional[str]
+    filename: Optional[str]
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
+class PlatformCourseResponse(BaseModel):
+    id: int
+    title: str
+    domain: str
+    description: str
+    duration: str
+    icon_name: str
+    order: int
+    materials: list[PlatformCourseMaterialResponse] = []
+    lessons: list[PlatformCourseLessonResponse] = []
+
+    model_config = ConfigDict(from_attributes=True)

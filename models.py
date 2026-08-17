@@ -88,3 +88,40 @@ class Material(Base):
 
     subject = relationship("Subject", back_populates="materials")
     uploaded_by = relationship("User", foreign_keys=[uploaded_by_id])
+
+class PlatformCourse(Base):
+    __tablename__ = "platform_courses"
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String)
+    domain = Column(String)
+    description = Column(Text)
+    duration = Column(String)
+    icon_name = Column(String)
+    order = Column(Integer, default=0)
+
+    materials = relationship("PlatformCourseMaterial", back_populates="course", cascade="all, delete-orphan")
+    lessons = relationship("PlatformCourseLesson", back_populates="course", cascade="all, delete-orphan", order_by="PlatformCourseLesson.order")
+
+class PlatformCourseMaterial(Base):
+    __tablename__ = "platform_course_materials"
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("platform_courses.id"))
+    title = Column(String)
+    description = Column(Text, nullable=True)
+    material_type = Column(String)  # pdf, video_url, video, worksheet, file
+    url = Column(String, nullable=True)
+    filename = Column(String, nullable=True)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+
+    course = relationship("PlatformCourse", back_populates="materials")
+
+class PlatformCourseLesson(Base):
+    __tablename__ = "platform_course_lessons"
+    id = Column(Integer, primary_key=True, index=True)
+    course_id = Column(Integer, ForeignKey("platform_courses.id"))
+    title = Column(String)
+    content = Column(Text)
+    duration = Column(String)
+    order = Column(Integer, default=0)
+
+    course = relationship("PlatformCourse", back_populates="lessons")
